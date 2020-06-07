@@ -1,4 +1,5 @@
 import pathlib
+from typing import List
 
 import nox
 from nox.sessions import Session
@@ -10,7 +11,7 @@ DOCKER_NAME = "PROJECT_NAME"
 TESTS_DIR = "tests"
 NOX_FILE = "noxfile.py"
 PYTHON_RUNTIME = f"{CWD}/venv/bin/python"
-APP_ENV_VARS = []
+APP_ENV_VARS: List[str] = []
 
 PY_FILES = " ".join([SRC_DIR, TESTS_DIR, NOX_FILE])
 
