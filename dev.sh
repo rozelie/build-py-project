@@ -3,12 +3,13 @@
 help() {
    echo "Run development scripts."
    echo
-   echo "Syntax: $0 [d|db|dr|f|h|r|t]"
+   echo "Syntax: $0 [d|db|dr|f|fl|h|l|r|t]"
    echo "Options:"
    echo "d     Docker build and docker run."
    echo "db    Docker build."
    echo "dr    Docker run."
    echo "f     Format code with black and isort."
+   echo "fl    Format and lint."
    echo "h     View this help message."
    echo "l     Lint with mypy and flake8."
    echo "r     Run python module locally in venv."
@@ -28,6 +29,7 @@ case "$1" in
         db) sessions=("docker_build") ;;
         dr) sessions=("docker_run") ;;
         f) sessions=("format") ;;
+        fl) sessions=("format" "mypy" "flake8") ;;
         h) help; exit ;;
         l) sessions=("mypy" "flake8") ;;
         r) sessions=("local_run") ;;
