@@ -62,7 +62,7 @@ class ProjectBuilder:
             self.set_new_path(self.sanitize_input(new_path, is_path=True))
 
     def echo_params(self):
-        click.echo(f"Running with params:")
+        click.echo("Running with params:")
         click.echo(f"\t{'Project Name:':<14} {self.name}")
         click.echo(f"\t{'Username':<14} {self.username}")
         click.echo(f"\t{'Email:':<14} {self.email}")

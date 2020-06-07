@@ -1,6 +1,12 @@
 # Build Py Project
 
 # Usage
-install venv with requirements
-# virtualenv venv
-run build_py_project
+```
+git clone https://github.com/rozelie/build-py-project
+cd build-py-project
+python3 -m pip install --user virtualenv
+python3 -m venv venv
+source ./venv/bin/activate
+python setup.py install
+python -m build_py_project
+```
