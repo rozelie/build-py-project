@@ -52,7 +52,7 @@ def option(
 @option(OptionType.STRING, "username", "Your Name", "Your name.")
 @option(OptionType.STRING, "email", "Your Email", "Your email.")
 @option(OptionType.CHOICE, "type", "Project Type", choices=path_utils.get_project_types())
-@option(OptionType.FLAG, "helm", "Project Type", "Include helm charts.")
+@option(OptionType.FLAG, "helm", "Helm Charts", "Include helm charts.")
 def cli(name: str, path: str, username: str, email: str, type: str, helm: bool):
     builder = project_builder.ProjectBuilder(name, path, username, email, type, helm)
     builder.build()
