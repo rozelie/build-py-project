@@ -1,12 +1,13 @@
 # Build Py Project
 
-# Usage
+# Installation
 ```
 git clone https://github.com/rozelie/build-py-project
 cd build-py-project
-python3 -m pip install --user virtualenv
-python3 -m venv venv
-source ./venv/bin/activate
-python setup.py install
+./install.sh
+```
+
+# Usage
+```
 python -m build_py_project
 ```
