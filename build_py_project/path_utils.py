@@ -40,4 +40,4 @@ class NewProjectPaths:
 
         self.templates = f"{self.cwd}/templates"
         self.type_template = f"{self.templates}/{type}"
-        self.shared_root = f"{self.templates}/project_shared_root "
+        self.shared_root = f"{self.templates}/project_root_shared"

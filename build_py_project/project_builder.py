@@ -46,7 +46,7 @@ class ProjectBuilder:
         self.echo("\nCopying template files...")
         commands.mkdir(self.paths.project_root)
         commands.cp(self.paths.type_template, self.paths.project_root, unpack=True)
-        commands.cp(self.paths.shared_root, self.paths.project_root)
+        commands.cp(self.paths.shared_root, self.paths.project_root, unpack=True)
         if not self.helm:
             self.echo("\nRemoving Helm charts...")
             commands.rm_dir(self.paths.charts)
