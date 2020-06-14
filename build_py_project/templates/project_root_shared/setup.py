@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup  # type: ignore
 
-name = "build_py_project"
+name = "{{ PROJECT_NAME }}"
 version = "0.0.1"
 
 with open("requirements.txt", "r") as f:
@@ -10,8 +10,8 @@ with open("requirements.txt", "r") as f:
 setup(
     name=name,
     version=version,
-    author="Ryan Ozelie",
-    author_email="ryan.ozelie@gmail.com",
+    author="{{ USERNAME }}",
+    author_email="{{ EMAIL }}",
     description="",
     packages_dir={},
     packages=find_packages(".", exclude="tests"),

@@ -1,10 +1,10 @@
 replicaCount: 1
 image:
-  name: PROJECT_NAME
+  name: {{ PROJECT_NAME }}
   tag: latest
 #  pullPolicy: Always
 
 python:
-  module: PROJECT_NAME
+  module: {{ PROJECT_NAME }}
 
 resources: {}
