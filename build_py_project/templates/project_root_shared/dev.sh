@@ -5,7 +5,6 @@ docker_name="{{ PROJECT_NAME }}"
 tests_dir="tests"
 py_files="$src_dir $tests_dir"
 
-source ./venv/bin/activate
 function use_venv() { source ./venv/bin/activate; echo "Running '$1'..."; $1; deactivate; }
 
 function run_module() { use_venv "python -m $src_dir"; }
