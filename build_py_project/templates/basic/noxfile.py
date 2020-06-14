@@ -6,8 +6,8 @@ from nox.sessions import Session
 
 CWD = pathlib.Path(__file__).parent.absolute()
 
-SRC_DIR = "PROJECT_NAME"
-DOCKER_NAME = "PROJECT_NAME"
+SRC_DIR = "{{ PROJECT_NAME }}"
+DOCKER_NAME = "{{ PROJECT_NAME }}"
 TESTS_DIR = "tests"
 NOX_FILE = "noxfile.py"
 PYTHON_RUNTIME = f"{CWD}/venv/bin/python"

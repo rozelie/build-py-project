@@ -1,13 +1,10 @@
 from subprocess import PIPE, Popen
 from typing import Tuple
 
-import click
-
 from . import path_utils
 
 
 def run(command: str) -> Tuple[str, str, int]:
-    click.echo(f"\tcmd: {command}")
     handle = Popen(command.split(), stdout=PIPE, stderr=PIPE, close_fds=True)
     stdout, stderr = handle.communicate()
     return (

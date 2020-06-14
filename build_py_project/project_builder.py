@@ -1,4 +1,7 @@
+from glob import glob
+
 import click
+from jinja2 import Template
 
 from . import commands, path_utils
 
@@ -11,11 +14,6 @@ class ProjectBuilder:
         self.email = email
         self.type = type
         self.helm = helm
-        self.template_to_new_str = {
-            "PROJECT_NAME": self.name,
-            "USERNAME": self.username,
-            "EMAIL": self.email,
-        }
 
     def build(self):
         self.echo_params()
@@ -48,42 +46,30 @@ class ProjectBuilder:
         commands.cp(self.paths.type_template, self.paths.project_root, unpack=True)
         commands.cp(self.paths.shared_root, self.paths.project_root, unpack=True)
         if not self.helm:
-            self.echo("\nRemoving Helm charts...")
+            self.echo("Removing Helm charts...")
             commands.rm_dir(self.paths.charts)
 
     def rename_dirs(self):
-        self.echo("\nRenaming dirs...")
+        self.echo("Renaming dirs...")
         commands.rename_dir(self.paths.src, self.name)
         if self.helm:
             commands.rename_dir(self.paths.charts_src, self.name)
 
     def replace_template_strs(self):
-        self.echo("\nReplacing template strings...")
+        self.echo("Replacing template strings...")
+        helm_templates = glob(f"{self.paths.charts}/*/templates/*")
         for file in path_utils.get_all_files_in_dir(self.paths.project_root):
-            with open(file) as f:
-                file_data = f.readlines()
+            # Helm templates should be handled by Helm, not Jinja
+            if file not in helm_templates:
+                with open(file) as template_file:
+                    template_contents = template_file.read()
 
-            replacements_made = []
-            new_data = []
-            for line in file_data:
-                for template_str in self.template_to_new_str.keys():
-                    if template_str in line:
-                        new_str = self.template_to_new_str[template_str]
-                        templated_line = line.replace(template_str, new_str)
-                        replacements_made.append((line.strip(), templated_line.strip()))
-                        line = templated_line
-
-                new_data.append(line)
-
-            if replacements_made:
-                self.echo(f"\t{file}")
-                for replacement in replacements_made:
-                    self.echo(f"\t\t{replacement[0]} -> {replacement[1]}")
-
-                with open(file, "w") as f:
-                    f.write("".join(new_data))
-
-                self.echo("")
+                template = Template(template_contents)
+                rendered_template = template.render(
+                    PROJECT_NAME=self.name, USERNAME=self.username, EMAIL=self.email,
+                )
+                with open(file, "w") as rendered_template_file:
+                    rendered_template_file.write(rendered_template)
 
     def echo_completion(self):
         color = "green"
