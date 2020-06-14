@@ -25,7 +25,7 @@ def get_project_types() -> Set[str]:
     return {x for x in top_level_template_dirs if x not in {"project_root_shared"}}
 
 
-def dir_exists(path_to_dir: str):
+def dir_exists(path_to_dir: str) -> bool:
     return os.path.isdir(path_to_dir)
 
 

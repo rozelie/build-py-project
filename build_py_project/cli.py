@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from functools import partial
-from typing import Iterable
+from typing import Callable, Iterable
 
 import click
 
@@ -18,7 +18,7 @@ def sanitize(_, __, arg: str) -> str:
     return arg.strip()
 
 
-def validate_path(context, _, path):
+def validate_path(context, _, path) -> str:
     if not path_utils.dir_exists(path):
         raise click.BadParameter(f"Path does not exist: {path}")
 
@@ -31,7 +31,7 @@ def validate_path(context, _, path):
 
 def option(
     type: OptionType, name: str, prompt: str, help: str = None, choices: Iterable[str] = None,
-):
+) -> Callable:
     click_option = partial(click.option, f"--{name}", prompt=prompt)
     if help:
         click_option = partial(click_option, help=help)
@@ -44,6 +44,8 @@ def option(
         return click_option(type=click.Choice(choices or []))
     elif type == OptionType.FLAG:
         return click_option(is_flag=True)
+
+    return click.option
 
 
 @click.command()
