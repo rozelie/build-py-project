@@ -27,5 +27,9 @@ def rm_dir(dir_path: str):
     run(f"rm -rf {dir_path}")
 
 
+def rm_file(file_path: str):
+    run(f"rm {file_path}")
+
+
 def rename_dir(dir_path: str, new_name: str):
     run(f"mv {dir_path} {path_utils.get_parent(dir_path)}/{new_name}")

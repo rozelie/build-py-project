@@ -3,17 +3,19 @@
 src_dir="{{ PROJECT_NAME }}"
 docker_name="{{ PROJECT_NAME }}"
 tests_dir="tests"
-py_files="$src_dir $tests_dir"
+py_files=("$src_dir" "$tests_dir")
 
-function use_venv() { source ./venv/bin/activate; echo "Running '$1'..."; $1; deactivate; }
+source ./venv/bin/activate
 
-function run_module() { use_venv "python -m $src_dir"; }
+function run_module() { python -m "$src_dir"; }
 
-function format() { use_venv "black --line-length=100 $py_files"; use_venv "isort -rc $py_files"; }
+function format() { black --line-length=100 "${py_files[@]}"; isort -rc "${py_files[@]}"; }
 
-function lint() { use_venv "mypy $py_files"; use_venv "flake8 $py_files"; }
+function lint() { mypy "${py_files[@]}"; flake8 "${py_files[@]}"; }
 
-function tests() { use_venv "pytest $tests_dir"; }
+function tests() { pytest "${py_files[@]}"; }
+
+function update_requirements() { pipdeptree -f --warn silence | grep '^ ' > requirements.txt; }
 
 function docker_build() { docker build --tag "$docker_name" .; }
 
@@ -23,7 +25,7 @@ function help() {
   cat <<EOF
 Run development scripts.
 
-Syntax: $0 [d|db|dr|f|fl|h|l|r|t]
+Syntax: $0 [d|db|dr|f|fl|h|l|r|t|u]
 Options:
 d     Docker build and docker run.
 db    Docker build.
@@ -34,6 +36,7 @@ h     View this help message.
 l     Lint with mypy and flake8.
 r     Run python module locally in venv.
 t     Run pytest in tests directory.
+u     Update requirements.txt.
 EOF
 }
 
@@ -47,5 +50,7 @@ case "$1" in
         l) lint ;;
         r) run_module ;;
         t) tests ;;
+        u) update_requirements ;;
         *) help; exit 1 ;;
 esac
+

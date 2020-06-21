@@ -5,6 +5,7 @@ from typing import Callable, Iterable
 import click
 
 from . import path_utils, project_builder
+from .app_config import app_config
 
 
 class OptionType(Enum):
@@ -30,11 +31,19 @@ def validate_path(context, _, path) -> str:
 
 
 def option(
-    type: OptionType, name: str, prompt: str, help: str = None, choices: Iterable[str] = None,
+    type: OptionType,
+    name: str,
+    prompt: str,
+    help: str = None,
+    choices: Iterable[str] = None,
+    default: str = None,
 ) -> Callable:
     click_option = partial(click.option, f"--{name}", prompt=prompt)
     if help:
         click_option = partial(click_option, help=help)
+
+    if default:
+        click_option = partial(click_option, default=default)
 
     if type == OptionType.STRING:
         return click_option(type=str, callback=sanitize)
@@ -50,11 +59,27 @@ def option(
 
 @click.command()
 @option(OptionType.STRING, "name", "Project Name", "The project name.")
-@option(OptionType.PATH, "path", "Project Path", "Path to new project.")
-@option(OptionType.STRING, "username", "Your Name", "Your name.")
-@option(OptionType.STRING, "email", "Your Email", "Your email.")
+@option(
+    OptionType.PATH,
+    "path",
+    "Project Path",
+    "Path to new project.",
+    default=app_config.user_config.path,
+)
+@option(
+    OptionType.STRING,
+    "username",
+    "Your Name",
+    "Your name.",
+    default=app_config.user_config.username,
+)
+@option(
+    OptionType.STRING, "email", "Your Email", "Your email.", default=app_config.user_config.email
+)
 @option(OptionType.CHOICE, "type", "Project Type", choices=path_utils.get_project_types())
 @option(OptionType.FLAG, "helm", "Helm Charts", "Include helm charts.")
 def run(name: str, path: str, username: str, email: str, type: str, helm: bool):
     builder = project_builder.ProjectBuilder(name, path, username, email, type, helm)
     builder.build()
+
+    app_config.user_config.update_empty_config_values(username, email, path)

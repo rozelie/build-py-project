@@ -3,6 +3,14 @@ import pathlib
 from typing import Iterator, List, Set, Tuple
 
 
+def file_exists(file_path: str) -> bool:
+    return pathlib.Path(file_path).is_file()
+
+
+def expand_home_dir() -> str:
+    return os.path.expanduser("~")
+
+
 def get_parent(file: str) -> pathlib.Path:
     return pathlib.Path(file).parent.absolute()
 
