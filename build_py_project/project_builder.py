@@ -1,9 +1,9 @@
 from glob import glob
 
-import click
 from jinja2 import Template
 
 from . import commands, path_utils
+from .printer import print_green, print_info
 
 
 class ProjectBuilder:
@@ -16,20 +16,14 @@ class ProjectBuilder:
         self.helm = helm
 
     def build(self):
-        self.echo_params()
+        self.print_params()
         self.copy_template_files()
         self.rename_dirs()
         self.replace_template_strs()
-        self.echo_completion()
+        self.print_completion()
 
-    def echo(self, text: str, color: str = None):
-        if color:
-            click.secho(text, fg=color)
-        else:
-            click.echo(text)
-
-    def echo_params(self):
-        self.echo("Running with params:")
+    def print_params(self):
+        print_green("Running with params:")
         for name, value in [
             ("Project Name", self.name),
             ("Path", self.paths.parent),
@@ -38,25 +32,25 @@ class ProjectBuilder:
             ("Type", self.type),
             ("Helm", self.helm),
         ]:
-            self.echo(f"\t{name:<14} {value}")
+            print_info(f"\t{name:<14} {value}")
 
     def copy_template_files(self):
-        self.echo("\nCopying template files...")
+        print_info("\nCopying template files...")
         commands.mkdir(self.paths.project_root)
         commands.cp(self.paths.type_template, self.paths.project_root, unpack=True)
         commands.cp(self.paths.shared_root, self.paths.project_root, unpack=True)
         if not self.helm:
-            self.echo("Removing Helm charts...")
+            print("Removing Helm charts...")
             commands.rm_dir(self.paths.charts)
 
     def rename_dirs(self):
-        self.echo("Renaming dirs...")
+        print_info("Renaming dirs...")
         commands.rename_dir(self.paths.src, self.name)
         if self.helm:
             commands.rename_dir(self.paths.charts_src, self.name)
 
     def replace_template_strs(self):
-        self.echo("Replacing template strings...")
+        print_info("Replacing template strings...")
         helm_templates = glob(f"{self.paths.charts}/*/templates/*")
         for file in path_utils.get_all_files_in_dir(self.paths.project_root):
             # Helm templates should be handled by Helm, not Jinja
@@ -71,7 +65,6 @@ class ProjectBuilder:
                 with open(file, "w") as rendered_template_file:
                     rendered_template_file.write(rendered_template)
 
-    def echo_completion(self):
-        color = "green"
-        self.echo("\nDone!", color=color)
-        self.echo(f"New project created at {self.paths.project_root}", color=color)
+    def print_completion(self):
+        print_green("\nDone!")
+        print_green(f"New project created at {self.paths.project_root}")

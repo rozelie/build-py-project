@@ -15,7 +15,7 @@ function lint() { mypy "${py_files[@]}"; flake8 "${py_files[@]}"; }
 
 function tests() { pytest "${py_files[@]}"; }
 
-function update_requirements() { pipdeptree -f --warn silence | grep '^ ' > requirements.txt; }
+function update_requirements() { pipdeptree -f --warn silence | grep -v '^ ' > requirements.txt; }
 
 function docker_build() { docker build --tag "$docker_name" .; }
 
